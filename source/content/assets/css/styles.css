@@ -1,0 +1,98 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    color: white;
+    background-color: #1D2326;
+    padding-top: 0;
+    margin-bottom: 50px;
+}
+
+/* Page template */
+
+#header {
+    height: 65px;
+    background-color: rgba(32,33,36,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+#change-language-btn a {
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+#change-language-btn a:hover {
+    color: black;
+}
+
+footer {
+    height: 40px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    background:#14191b;
+    font-size:small;
+    text-transform:capitalize;
+    color:#777;
+    text-align:center;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+    padding: 10px;
+}
+
+/* Login page */
+
+.oauth-logins {
+    margin-top: 10px;
+ }
+
+#login-form>a {
+    display: block;
+    font-size: small;
+    color: white;
+    margin-top: 1rem;
+}
+
+#login-links {
+    list-style: none;
+}
+
+#login-links a {
+   color: #AAA;
+   font-style: italic;
+   font-size: small;
+}
+
+/* License Page */
+
+.license-option {
+    border: 1px solid white;
+    border-radius: 10px;
+    width: 48%;
+    float: left;
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+.license-price {
+    margin: 15px 0;
+}
+
+.license-price-text {
+    font-size: 2.5rem;
+}
+
+.license-btn {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.modal {
+    color: black;
+}

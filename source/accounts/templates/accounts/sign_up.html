@@ -1,0 +1,23 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_block %}
+    <title>AVROD - Sign up</title>
+{% endblock %}
+
+{% block content %}
+
+    <h3>{% trans 'Create an account' %}</h3>
+
+    <form id="signup-form" method="post">
+
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <button class="btn btn-outline-success">{% trans 'Create' %}</button>
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_block %}
+<title>License Options</title>
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock head_block %}
+
+{% block content %}
+    <h3>Licensing</h3>
+    <p>Gain full access to the AVROD software and explore all the available locations.</p>
+    <div class="license-option">
+        <h4>Monthly License</h4>
+        <div class="license-price">
+            <div class="license-price-text">$X.XX</div>
+            <div>CAD</div>
+        </div>
+        <div class="text-muted">Billed Monthly</div>
+        <button id='checkout-btn' class="btn btn-outline-primary license-btn">{% trans 'Select' %}</button>
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var session_id = '{{ session_id }}';
+</script>
+<script src="{% static 'js/stripe-checkout.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,43 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+{% load static %}
+{% load socialaccount %}
+
+{% block head_block %}
+    <title>AVROD - Login</title>
+{% endblock %}
+
+{% block content %}
+
+    <h3>{% trans 'Login' %}</h3>
+
+    <form id="login-form" method="post">
+
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <button class="btn btn-outline-primary">{% trans 'Log in' %}</button>
+        <a href="{% url 'accounts:sign_up' %}">{% trans 'Don\'t have an account? Click here to create one.' %}</a>
+        <div class="oauth-logins">
+            <a href="{% provider_login_url 'steam' %}"><img src="{% static '/img/steam-button.png' %}" alt="Sign in through Steam."></a>
+        </div>
+
+    </form>
+
+    <hr>
+
+    <ul id="login-links">
+        <li>
+            <a href="{% url 'accounts:restore_password' %}">{% trans 'Forgot your password?' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'accounts:remind_username' %}">{% trans 'Forgot your username?' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'accounts:resend_activation_code' %}">{% trans 'Resend an activation code' %}</a>
+        </li>
+    </ul>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_block %}
+    <title>AVROD - Remind Username</title>
+{% endblock %}
+
+{% block content %}
+
+    <h3>{% trans 'Remind a username' %}</h3>
+
+    <p>Please enter your email below and we will send you an email containing a reminder of your account username.</p>
+
+    <form method="post">
+
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <button class="btn btn-outline-primary">{% trans 'Next' %}</button>
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'layouts/default/page.html' %}
+
+{% block content %}
+
+<p>Your subscription has been updated</p>
+<p>You will be redirected to the license management page.</p>
+
+<meta http-equiv="refresh" content="4;url={% url 'payment:manage' sub_id=sub_id %}">
+
+{% endblock %}

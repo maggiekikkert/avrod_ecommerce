@@ -1,0 +1,25 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_block %}
+    <title>AVROD - Resend activation code</title>
+{% endblock %}
+
+{% block content %}
+
+    <h3>{% trans 'Resend an activation code' %}</h3>
+
+    <p>Enter your email or username below and we will resend your account activation code.</p>
+
+    <form method="post">
+
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <button class="btn btn-outline-primary">{% trans 'Next' %}</button>
+
+    </form>
+
+{% endblock %}
