@@ -82,6 +82,7 @@ class PaymentSuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'success.html'
 
     def get(self, request):
+        sub_id = kwargs.get('sub_id')
         return render(request, self.template_name)
 
 
