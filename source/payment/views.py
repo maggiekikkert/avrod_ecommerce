@@ -19,6 +19,7 @@ import datetime
 stripe.api_key = settings.STRIPE_SECRET_KEY
 global stripe_customer
 
+# License Management page
 class LicenseView(LoginRequiredMixin, TemplateView):
     template_name = 'license.html'
 
@@ -26,14 +27,17 @@ class LicenseView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         customer = Customer.objects.filter(user_id=user)
 
+        # If the user is already a stripe customer, send their stripe customer id through the session
         if customer.exists():
             customer_id = Customer.objects.values_list('customer_id', flat=True).get(user_id=user)
             subscription = Subscription.objects.filter(customer_id=customer_id)
+            # if they have an active subscription send them to the management page
             if subscription.exists():
                 subscription = Subscription.objects.get(customer_id=customer_id)
                 last_period = stripe.Subscription.retrieve(subscription.sub_id).cancel_at_period_end
-                request.session['sub_last_period'] = last_period
+                request.session['sub_last_period'] = last_period    # store info in the browser session
                 return redirect('payment:manage', sub_id=subscription.sub_id)
+            # otherwise send to the page to sign up for a new subscription
             else:
                 session = stripe.checkout.Session.create(
                     customer = customer_id,
@@ -49,7 +53,7 @@ class LicenseView(LoginRequiredMixin, TemplateView):
                         'avrod_id': user.id
                     }
                 )
-
+        # if they aren't already a stripe customer create a session with no customer id
         else:
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -65,6 +69,7 @@ class LicenseView(LoginRequiredMixin, TemplateView):
                 }
             )
 
+        # Pass the session id to the html page so it can be accessed by Stripe Checkout
         context = {
             'session_id': session.id
         }
@@ -72,6 +77,7 @@ class LicenseView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
         
 
+# Display Payment success page
 class PaymentSuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'success.html'
 
@@ -79,14 +85,17 @@ class PaymentSuccessView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name)
 
 
+# Display subscription management page
 class ManageLicenseView(LoginRequiredMixin, TemplateView):
     template_name = 'manage.html'
 
     def get(self, request, *args, **kwargs):
+        # Get the subscription information
         sub_id = kwargs.get('sub_id')
         last_period = request.session.get('sub_last_period')
         subscription = Subscription.objects.get(sub_id=sub_id)
 
+        # Create a checkout session in case user wants to update payment information
         session = stripe.checkout.Session.create(
             customer=subscription.customer_id.customer_id,
             payment_method_types=['card'],
@@ -103,6 +112,7 @@ class ManageLicenseView(LoginRequiredMixin, TemplateView):
             }
         )
 
+        # Send subscription information to the html template
         context = {
             'session_id': session.id,
             'subscription': subscription,
@@ -111,18 +121,22 @@ class ManageLicenseView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
 
 
+# Process subscription cancellation request and display success message
 class CancelSubscriptionView(LoginRequiredMixin, TemplateView):
     template_name = 'cancel.html'
     
     def get(self, request, *args, **kwargs):
+        # Get the subscription information
         sub_id = kwargs.get('sub_id')
         subscription = Subscription.objects.get(sub_id=sub_id)
 
+        # Set that the subscription will end at the end of current period
         stripe.Subscription.modify(
             sub_id,
             cancel_at_period_end=True
         )
 
+        # Send sub id to the html page
         context = {
             'sub_id': sub_id,
         }
@@ -130,6 +144,7 @@ class CancelSubscriptionView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
 
 
+# Display success message after updating payment method for subscription
 class UpdateSubscriptionView(LoginRequiredMixin, TemplateView):
     template_name = 'update-success.html'
 
@@ -142,18 +157,22 @@ class UpdateSubscriptionView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
 
 
+# Process Subscription reactivation and display success message
 class ReactivateSubscriptionView(LoginRequiredMixin, TemplateView):
     template_name = 'reactivate.html'
 
     def get(self, request, *args, **kwargs):
+        # Get subscription information
         sub_id = kwargs.get('sub_id')
         subscription = Subscription.objects.get(sub_id=sub_id)
 
+        # Update subscription to not end at the end of current period
         stripe.Subscription.modify(
             sub_id,
             cancel_at_period_end=False,
         )
 
+        # Send sub id to the html template
         context = {
             'sub_id': sub_id,
         }
@@ -162,7 +181,7 @@ class ReactivateSubscriptionView(LoginRequiredMixin, TemplateView):
 
 
 # Webhook Receiver
-endpoint_secret = 'whsec_P2OxXQZFSLJ1F5kgPULOEKa0DcoqjVJj'
+endpoint_secret = 'whsec_P2OxXQZFSLJ1F5kgPULOEKa0DcoqjVJj'  # This will change when you set up your own webhook receiver through stripe
 @csrf_exempt
 def webhook(request):
     payload = request.body
@@ -236,6 +255,7 @@ def webhook(request):
             )
             subscription.save()
 
+    # Handle customer.subscription.deleted event
     elif event['type'] == 'customer.subscription.deleted':
         session = event['data']['object']
         customer = session.customer

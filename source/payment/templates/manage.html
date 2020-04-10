@@ -12,12 +12,12 @@
     <h3>Manage your license</h3>
     <p>You currently have a monthly license</p>
     {% if last_period %}
-    <p>Your subscription will end on {{ subscription.renewal_date }}</p>
-    <button id='reactivate-btn' class='btn btn-outline-primary' style='display:block;' data-toggle='modal' data-target='#modal-window'>Reactivate Subscription</button>
+        <p>Your subscription will end on {{ subscription.renewal_date }}</p>
+        <button id='reactivate-btn' class='btn btn-outline-primary' style='display:block;' data-toggle='modal' data-target='#modal-window'>Reactivate Subscription</button>
     {% else %}
-    <p>Your next payment date is {{ subscription.renewal_date }}</p>
-    <button id='checkout-btn' class='btn btn-outline-primary' style='display:block; margin-bottom:10px;'>Update Payment Information</button>
-    <button id='cancel-btn' class='btn btn-outline-danger' style='display:block;' data-toggle='modal' data-target='#modal-window'>Cancel Subscription</button>
+        <p>Your next payment date is {{ subscription.renewal_date }}</p>
+        <button id='checkout-btn' class='btn btn-outline-primary' style='display:block; margin-bottom:10px;'>Update Payment Information</button>
+        <button id='cancel-btn' class='btn btn-outline-danger' style='display:block;' data-toggle='modal' data-target='#modal-window'>Cancel Subscription</button>
     {% endif %}
     
     <!-- Cancel subscription modal window -->
@@ -26,34 +26,34 @@
             <div class="modal-content">
                 <div class="modal-header">
                     {% if last_period %}
-                    <h5 class="modal-title">Reactivate Subscription</h5>
+                        <h5 class="modal-title">Reactivate Subscription</h5>
                     {% else %}
-                    <h5 class="modal-title">Cancel Subscription</h5>
+                        <h5 class="modal-title">Cancel Subscription</h5>
                     {% endif %}
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 {% if last_period %}
-                <div class="modal-body">
-                    <p>You are about to reactivate your subscription. Continue?</p>
-                </div>
-                <div class="modal-footer">
-                    <form action="{% url 'payment:reactivate' sub_id=subscription.sub_id %}">
-                        <button type="submit" class="btn btn-primary">Yes</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                </div>
+                    <div class="modal-body">
+                        <p>You are about to reactivate your subscription. Continue?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'payment:reactivate' sub_id=subscription.sub_id %}">
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
                 {% else %}
-                <div class="modal-body">
-                    <p>Are you sure you want to cancel your subscription?</p>
-                </div>
-                <div class="modal-footer">
-                    <form action="{% url 'payment:cancel-sub' sub_id=subscription.sub_id %}">
-                        <button type="submit" class="btn btn-primary">Yes</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to cancel your subscription?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'payment:cancel-sub' sub_id=subscription.sub_id %}">
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
                 {% endif %}
             </div>
         </div>
